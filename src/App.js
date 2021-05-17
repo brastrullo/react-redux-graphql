@@ -1,56 +1,69 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
+  const [accountDisplayed, setAccountDisplayed] = useState(null);
+  const [selectedAccount, setSelectedAccount]  = useState(null);
+  const [viewedAccounts, setViewedAccounts]  = useState([]);
+  const [accountNames, setAccountNames] = useState(null);
+  useEffect(() => {
+    setAccountNames(['Jim', 'Tim', 'Kim']);
+  }, []);
+  useEffect(() => {
+    console.log({selectedAccount})
+  }, [selectedAccount]);
+  const onBlurHandler = (e) => {
+    e.preventDefault();
+    setSelectedAccount(e.target.value);
+  }
+  const getAccountDetails = (e) => {
+    e.preventDefault();
+    showAccountDetails();
+  };
+  const showAccountDetails = () => {
+    const getAccountData = (name) => ({
+      name,
+      email: `${name}@gmail.com`
+    })
+    const obj = getAccountData(selectedAccount)
+    setAccountDisplayed(obj);
+    if (selectedAccount !== null) {
+      setViewedAccounts(accounts => [...accounts, selectedAccount])
+    }
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <div>
+        <label htmlFor="account">Choose an account:</label>
+        <input
+          list="account-names"
+          type="text"
+          name="account"
+          onBlur={onBlurHandler}
+        />
+        {accountNames && (
+          <datalist id="account-names">
+            {accountNames.map((val, i) => (
+              <option key={`acc${i}`} value={val} />
+            ))}
+          </datalist>
+        )}
+        <button onClick={getAccountDetails}>select</button>
+      </div>
+      { accountDisplayed &&
+        <div>
+          <p>{accountDisplayed.name}</p>
+          <p>{accountDisplayed.email}</p>
+        </div>
+      }
+      <div> 
+        <p>Last viewed accounts:</p>
+        {
+          viewedAccounts.map((el, i) => 
+            <span key={`lva${i}`}>{el}</span>
+          )
+        }
+      </div>
     </div>
   );
 }
