@@ -16,7 +16,6 @@ function App() {
   const accounts = useSelector(selectAccounts);
   const accountObj = useSelector(selectAccountObj);
   const dispatch = useDispatch();
-  // const [accountObj, setAccountObj] = useState({});
   const [viewedAccounts, setViewedAccounts] = useState([]);
   useEffect(() => {
     dispatch(getDatalist());
@@ -30,7 +29,6 @@ function App() {
 
   const deleteHandler = (account) => {
     dispatch(deleteAccount(account));
-    // setAccountObj({});
   };
 
   const getAccountDetails = (id) => {
