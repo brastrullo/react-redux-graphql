@@ -1,6 +1,9 @@
 import React from 'react';
 
-export function Details({ accountObj, deleteAccount }) {
+export function Details({ accountObj, deleteHandler }) {
+  const deleteAccount = () => {
+    deleteHandler(accountObj.name);
+  };
   return (
     <>
       {accountObj ? (

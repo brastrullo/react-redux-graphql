@@ -6,10 +6,11 @@ const initialState = {
   status: 'idle',
 };
 
-export const incrementAsync = createAsyncThunk(
+export const getAccounts = createAsyncThunk(
   'counter/fetchAccounts',
   async () => {
     const response = await fetchAccounts();
+    console.log({  response  });
     return response.data;
   }
 );
@@ -19,6 +20,7 @@ export const accountsSlice = createSlice({
   initialState,
   reducers: {
     deleteAccount: (state, action) => {
+      console.log({ state, action });
       state.data = state.data.filter(
         (accountName) => accountName !== action.payload
       );
@@ -26,12 +28,12 @@ export const accountsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(incrementAsync.pending, (state) => {
+      .addCase(getAccounts.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(incrementAsync.fulfilled, (state, action) => {
+      .addCase(getAccounts.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.value += action.payload;
+        state.data = action.payload;
       });
   },
 });

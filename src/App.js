@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
+  getAccounts,
   deleteAccount,
   selectAccounts,
 } from './features/details/accountsSlice';
@@ -13,21 +14,20 @@ function App() {
   const accounts = useSelector(selectAccounts);
   const dispatch = useDispatch();
   const [accountObj, setAccountObj] = useState(null);
-  const [viewedAccounts, setViewedAccounts]  = useState([]);
-  const [accountNames, setAccountNames] = useState(null);
-
+  const [viewedAccounts, setViewedAccounts] = useState([]);
+  // const [accountNames, setAccountNames] = useState(null);
   useEffect(() => {
-    setAccountNames(accounts);
-  }, [accounts]);
+    dispatch(getAccounts());
+  }, []);
   useEffect(() => {
     if (accountObj) console.log(accountObj.name);
   }, [accountObj]);
   useEffect(() => {
-    console.log(viewedAccounts)
+    console.log(viewedAccounts);
   }, [viewedAccounts]);
 
-  const deleteHandler = () => {
-    dispatch(deleteAccount());
+  const deleteHandler = (account) => {
+    dispatch(deleteAccount(account));
     setAccountObj(null);
   };
 
@@ -51,7 +51,7 @@ function App() {
   return (
     <div className="App">
       <Searchbar
-        accountNames={accountNames}
+        accountNames={accounts}
         getAccountDetails={getAccountDetails}
       />
       <Details accountObj={accountObj} deleteHandler={deleteHandler} />
