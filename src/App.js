@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  getAccounts,
+  getAccount,
+  getDatalist,
   deleteAccount,
   selectAccounts,
+  selectAccountObj,
 } from './features/details/accountsSlice';
 import './App.css';
 import { Searchbar } from './features/searchbar/Searchbar';
@@ -12,40 +14,35 @@ import { History } from './features/history/History';
 
 function App() {
   const accounts = useSelector(selectAccounts);
+  const accountObj = useSelector(selectAccountObj);
   const dispatch = useDispatch();
-  const [accountObj, setAccountObj] = useState(null);
+  // const [accountObj, setAccountObj] = useState({});
   const [viewedAccounts, setViewedAccounts] = useState([]);
-  // const [accountNames, setAccountNames] = useState(null);
   useEffect(() => {
-    dispatch(getAccounts());
+    dispatch(getDatalist());
   }, []);
   useEffect(() => {
-    if (accountObj) console.log(accountObj.name);
+    if (Object.keys(accountObj) > 0) console.log(accountObj.name);
   }, [accountObj]);
   useEffect(() => {
-    console.log(viewedAccounts);
+    console.log({ viewedAccounts });
   }, [viewedAccounts]);
 
   const deleteHandler = (account) => {
     dispatch(deleteAccount(account));
-    setAccountObj(null);
+    // setAccountObj({});
   };
 
-  const getAccountDetails = (value) => {
-    const obj = getAccountData(value);
-    const account = obj.name;
-    setAccountObj(obj);
-    updateHistory(account);
+  const getAccountDetails = (id) => {
+    dispatch(getAccount(id));
+    console.log({accountObj})
+    updateHistory();
   };
 
-  const getAccountData = (name) => ({
-    name,
-    email: `${name}@gmail.com`,
-  });
-
-  const updateHistory = (account) => {
-    if (viewedAccounts[0] === account) return;
-    setViewedAccounts((accounts) => [...new Set([account, ...accounts])]);
+  const updateHistory = () => {
+    console.log({ accountObj, viewedAccounts });
+    if (viewedAccounts.length > 0 && (viewedAccounts[0].id === accountObj.id)) return;
+    setViewedAccounts((accounts) => [...new Set([accountObj, ...accounts])]);
   };
 
   return (

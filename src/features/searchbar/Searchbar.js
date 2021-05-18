@@ -15,7 +15,8 @@ export function Searchbar({ accountNames, getAccountDetails }) {
   const submitHandler = (e) => {
     e.preventDefault();
     setValue('');
-    getAccountDetails(value);
+    const id = accountNames.find((obj) => obj.name === value).id;
+    getAccountDetails(id);
   };
 
   return (
@@ -30,8 +31,8 @@ export function Searchbar({ accountNames, getAccountDetails }) {
       />
       {accountNames && (
         <datalist id="account-names">
-          {accountNames.map((val, i) => (
-            <option key={`acc${i}`} value={val} />
+          {accountNames.map((obj, i) => (
+            <option key={`acc${i}`} value={obj.name} />
           ))}
         </datalist>
       )}

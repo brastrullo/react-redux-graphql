@@ -1,17 +1,32 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchAccounts } from './accountsAPI';
+import { fetchDatalist, fetchAccount } from './accountsAPI';
 
 const initialState = {
   data: [],
+  obj: {},
   status: 'idle',
 };
 
-export const getAccounts = createAsyncThunk(
-  'counter/fetchAccounts',
+export const getDatalist = createAsyncThunk(
+  'counter/fetchDatalist',
   async () => {
-    const response = await fetchAccounts();
-    console.log({  response  });
-    return response.data;
+    const response = await fetchDatalist();
+    console.log({ response });
+    return response;
+  }
+);
+export const getAccount = createAsyncThunk(
+  'counter/fetchAccount',
+  async (id) => {
+    const response = await fetchAccount(id);
+    // const transformData = await response.map((el) => ({
+    //   id: el.id,
+    //   name: `${el.nameFirst} ${el.nameLast}`,
+    //   email: el.email,
+    //   ip: el.ip,
+    // }));
+    console.log('asdf', { response });
+    return response;
   }
 );
 
@@ -28,12 +43,23 @@ export const accountsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAccounts.pending, (state) => {
+      .addCase(getDatalist.pending, (state) => {
         state.status = 'loading';
+        console.log(state.status);
       })
-      .addCase(getAccounts.fulfilled, (state, action) => {
+      .addCase(getDatalist.fulfilled, (state, action) => {
         state.status = 'idle';
+        console.log(state.status);
         state.data = action.payload;
+      })
+      .addCase(getAccount.pending, (state) => {
+        state.status = 'loading';
+        console.log(state.status);
+      })
+      .addCase(getAccount.fulfilled, (state, action) => {
+        state.status = 'idle';
+        console.log(state.status);
+        state.obj = action.payload;
       });
   },
 });
@@ -41,5 +67,6 @@ export const accountsSlice = createSlice({
 export const { deleteAccount } = accountsSlice.actions;
 
 export const selectAccounts = (state) => state.accounts.data;
+export const selectAccountObj = (state) => state.accounts.obj;
 
 export default accountsSlice.reducer;

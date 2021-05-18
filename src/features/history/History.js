@@ -7,13 +7,11 @@ export function History({ viewedAccounts, getAccountDetails }) {
   return (
     <>
       <p>Last viewed accounts:</p>
-      {
-        viewedAccounts.slice(1, 4).map((el, i) => (
-          <button key={`lva${i}`} onClick={reviewAccount}>
-            {el}
-          </button>
-        ))
-      }
+      {viewedAccounts.slice(1, 4).map((el, i) => (
+        <button key={`lva${i}`} onClick={reviewAccount}>
+          {el.name}
+        </button>
+      ))}
     </>
   );
 }
