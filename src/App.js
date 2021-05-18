@@ -1,45 +1,58 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './App.css';
 
 function App() {
+  const [value, setValue] = useState("");
   const [accountDisplayed, setAccountDisplayed] = useState(null);
-  const [selectedAccount, setSelectedAccount]  = useState(null);
   const [viewedAccounts, setViewedAccounts]  = useState([]);
   const [accountNames, setAccountNames] = useState(null);
+  const inputRef = useRef(null);
   useEffect(() => {
-    setAccountNames(['Jim', 'Tim', 'Kim']);
+    console.log({value})
+  }, [value])
+  useEffect(() => {
+    setAccountNames(['Mike', 'Greg', 'Bob', "Sue"]);
   }, []);
   useEffect(() => {
-    console.log({selectedAccount})
-  }, [selectedAccount]);
-  const onBlurHandler = (e) => {
+    if (accountDisplayed) console.log(accountDisplayed.name)
+  }, [accountDisplayed]);
+  useEffect(() => {
+    console.log(viewedAccounts)
+  }, [viewedAccounts]);
+  const inputHandler = (e) => {
     e.preventDefault();
-    setSelectedAccount(e.target.value);
+    setValue(e.target.value);
   }
   const getAccountDetails = (e) => {
     e.preventDefault();
+    setValue("");
+    inputRef.current.value="";
     showAccountDetails();
   };
+  const getAccountData = (name) => ({
+    name,
+    email: `${name}@gmail.com`
+  })
   const showAccountDetails = () => {
-    const getAccountData = (name) => ({
-      name,
-      email: `${name}@gmail.com`
-    })
-    const obj = getAccountData(selectedAccount)
+    const obj = getAccountData(value)
+    const accountName = obj.name;
     setAccountDisplayed(obj);
-    if (selectedAccount !== null) {
-      setViewedAccounts(accounts => [...accounts, selectedAccount])
-    }
+    if (viewedAccounts[0] === accountName) return
+    setViewedAccounts(accounts => [...new Set([accountName, ...accounts])])
+  }
+  const reviewAccount = (e) => {
+    console.log(e.target.innerText)
   }
   return (
     <div className="App">
-      <div>
+      <form onSubmit={getAccountDetails}>
         <label htmlFor="account">Choose an account:</label>
         <input
+          ref={inputRef}
           list="account-names"
           type="text"
           name="account"
-          onBlur={onBlurHandler}
+          onChange={inputHandler}
         />
         {accountNames && (
           <datalist id="account-names">
@@ -48,20 +61,23 @@ function App() {
             ))}
           </datalist>
         )}
-        <button onClick={getAccountDetails}>select</button>
-      </div>
-      { accountDisplayed &&
+        <input type="submit" disabled={!value.length > 0} value="display"/>
+      </form>
+      { accountDisplayed ?
         <div>
           <p>{accountDisplayed.name}</p>
           <p>{accountDisplayed.email}</p>
         </div>
-      }
-      <div> 
+        : <p>No account displayed.</p>
+      } 
+      <div>
         <p>Last viewed accounts:</p>
-        {
-          viewedAccounts.map((el, i) => 
-            <span key={`lva${i}`}>{el}</span>
-          )
+        { viewedAccounts.length > 0 ?
+          (
+            viewedAccounts.slice(1, 4).map((el, i) => 
+              <span key={`lva${i}`} onClick={reviewAccount}>{el}</span>
+            )
+          ) : <span> No accounts viewed yet.</span>
         }
       </div>
     </div>
