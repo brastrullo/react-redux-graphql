@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   getAccount,
@@ -6,6 +6,7 @@ import {
   deleteAccount,
   selectAccounts,
   selectAccountObj,
+  selectHistory,
 } from './features/details/accountsSlice';
 import './App.css';
 import { Searchbar } from './features/searchbar/Searchbar';
@@ -15,17 +16,14 @@ import { History } from './features/history/History';
 function App() {
   const accounts = useSelector(selectAccounts);
   const accountObj = useSelector(selectAccountObj);
+  const history = useSelector(selectHistory);
   const dispatch = useDispatch();
-  const [viewedAccounts, setViewedAccounts] = useState([]);
   useEffect(() => {
     dispatch(getDatalist());
   }, []);
   useEffect(() => {
     if (Object.keys(accountObj) > 0) console.log(accountObj.name);
   }, [accountObj]);
-  useEffect(() => {
-    console.log({ viewedAccounts });
-  }, [viewedAccounts]);
 
   const deleteHandler = (account) => {
     dispatch(deleteAccount(account));
@@ -33,14 +31,6 @@ function App() {
 
   const getAccountDetails = (id) => {
     dispatch(getAccount(id));
-    console.log({accountObj})
-    updateHistory();
-  };
-
-  const updateHistory = () => {
-    console.log({ accountObj, viewedAccounts });
-    if (viewedAccounts.length > 0 && (viewedAccounts[0].id === accountObj.id)) return;
-    setViewedAccounts((accounts) => [...new Set([accountObj, ...accounts])]);
   };
 
   return (
@@ -50,9 +40,9 @@ function App() {
         getAccountDetails={getAccountDetails}
       />
       <Details accountObj={accountObj} deleteHandler={deleteHandler} />
-      {viewedAccounts.length > 0 && (
+      {history.length > 0 && (
         <History
-          viewedAccounts={viewedAccounts}
+          viewedAccounts={history}
           getAccountDetails={getAccountDetails}
         />
       )}

@@ -2,8 +2,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchDatalist, fetchAccount } from './accountsAPI';
 
 const initialState = {
-  data: [],
+  names: [],
   obj: {},
+  history: [],
   status: 'idle',
 };
 
@@ -36,7 +37,7 @@ export const accountsSlice = createSlice({
   reducers: {
     deleteAccount: (state, action) => {
       console.log({ state, action });
-      state.data = state.data.filter(
+      state.names = state.names.filter(
         (accountName) => accountName !== action.payload
       );
     },
@@ -50,7 +51,7 @@ export const accountsSlice = createSlice({
       .addCase(getDatalist.fulfilled, (state, action) => {
         state.status = 'idle';
         console.log(state.status);
-        state.data = action.payload;
+        state.names = action.payload;
       })
       .addCase(getAccount.pending, (state) => {
         state.status = 'loading';
@@ -60,13 +61,20 @@ export const accountsSlice = createSlice({
         state.status = 'idle';
         console.log(state.status);
         state.obj = action.payload;
+        if (
+          state.history.length > 0 &&
+          state.history[0].id === action.payload.id
+        )
+          return;
+        state.history = [...new Set([action.payload, ...state.history])];
       });
   },
 });
 
 export const { deleteAccount } = accountsSlice.actions;
 
-export const selectAccounts = (state) => state.accounts.data;
+export const selectAccounts = (state) => state.accounts.names;
 export const selectAccountObj = (state) => state.accounts.obj;
+export const selectHistory = (state) => state.accounts.history;
 
 export default accountsSlice.reducer;
