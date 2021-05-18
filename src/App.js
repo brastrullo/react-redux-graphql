@@ -1,85 +1,49 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import { Searchbar } from './features/searchbar/Searchbar';
+import { Details } from './features/details/Details';
+import { History } from './features/history/History';
 
 function App() {
-  const [value, setValue] = useState("");
-  const [accountDisplayed, setAccountDisplayed] = useState(null);
+  const [accountObj, setAccountObj] = useState(null);
   const [viewedAccounts, setViewedAccounts]  = useState([]);
   const [accountNames, setAccountNames] = useState(null);
-  const inputRef = useRef(null);
-  useEffect(() => {
-    console.log({value})
-  }, [value])
+
   useEffect(() => {
     setAccountNames(['Mike', 'Greg', 'Bob', "Sue"]);
   }, []);
   useEffect(() => {
-    if (accountDisplayed) console.log(accountDisplayed.name)
-  }, [accountDisplayed]);
+    if (accountObj) console.log(accountObj.name);
+  }, [accountObj]);
   useEffect(() => {
     console.log(viewedAccounts)
   }, [viewedAccounts]);
-  const inputHandler = (e) => {
-    e.preventDefault();
-    setValue(e.target.value);
-  }
-  const getAccountDetails = (e) => {
-    e.preventDefault();
-    setValue("");
-    inputRef.current.value="";
-    showAccountDetails();
+
+  const getAccountDetails = (value) => {
+    const obj = getAccountData(value);
+    const account = obj.name;
+    setAccountObj(obj);
+    updateHistory(account);
   };
+
   const getAccountData = (name) => ({
     name,
-    email: `${name}@gmail.com`
-  })
-  const showAccountDetails = () => {
-    const obj = getAccountData(value)
-    const accountName = obj.name;
-    setAccountDisplayed(obj);
-    if (viewedAccounts[0] === accountName) return
-    setViewedAccounts(accounts => [...new Set([accountName, ...accounts])])
-  }
-  const reviewAccount = (e) => {
-    console.log(e.target.innerText)
-  }
+    email: `${name}@gmail.com`,
+  });
+
+  const updateHistory = (account) => {
+    if (viewedAccounts[0] === account) return;
+    setViewedAccounts((accounts) => [...new Set([account, ...accounts])]);
+  };
+
   return (
     <div className="App">
-      <form onSubmit={getAccountDetails}>
-        <label htmlFor="account">Choose an account:</label>
-        <input
-          ref={inputRef}
-          list="account-names"
-          type="text"
-          name="account"
-          onChange={inputHandler}
-        />
-        {accountNames && (
-          <datalist id="account-names">
-            {accountNames.map((val, i) => (
-              <option key={`acc${i}`} value={val} />
-            ))}
-          </datalist>
-        )}
-        <input type="submit" disabled={!value.length > 0} value="display"/>
-      </form>
-      { accountDisplayed ?
-        <div>
-          <p>{accountDisplayed.name}</p>
-          <p>{accountDisplayed.email}</p>
-        </div>
-        : <p>No account displayed.</p>
-      } 
-      <div>
-        <p>Last viewed accounts:</p>
-        { viewedAccounts.length > 0 ?
-          (
-            viewedAccounts.slice(1, 4).map((el, i) => 
-              <span key={`lva${i}`} onClick={reviewAccount}>{el}</span>
-            )
-          ) : <span> No accounts viewed yet.</span>
-        }
-      </div>
+      <Searchbar
+        accountNames={accountNames}
+        getAccountDetails={getAccountDetails}
+      />
+      <Details accountObj={accountObj} />
+      <History viewedAccounts={viewedAccounts}  />
     </div>
   );
 }
