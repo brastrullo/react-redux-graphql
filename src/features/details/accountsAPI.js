@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 
 const client = new ApolloClient({
-  uri: 'https://dev.presscentric.com/interview-test/graphql',
+  uri: process.env.REACT_APP_GQL_ENDPOINT,
   cache: new InMemoryCache(),
 });
 
