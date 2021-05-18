@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 export function Searchbar({ accountNames, getAccountDetails }) {
   const [value, setValue] = useState('');
+  const [error, setError] = useState('');
   const DISABLED = !value.length > 0;
   useEffect(() => {
     console.log({ value });
@@ -10,6 +11,7 @@ export function Searchbar({ accountNames, getAccountDetails }) {
   const inputHandler = (e) => {
     e.preventDefault();
     setValue(e.target.value);
+    setError('');
   };
 
   const submitHandler = (e) => {
@@ -17,7 +19,7 @@ export function Searchbar({ accountNames, getAccountDetails }) {
     setValue('');
     const id = accountNames.find((obj) => obj.name === value)?.id;
     if (!id) {
-      alert('Account not found');
+      setError('Account not found');
     }
     getAccountDetails(id);
   };
@@ -40,6 +42,7 @@ export function Searchbar({ accountNames, getAccountDetails }) {
         </datalist>
       )}
       <input type="submit" disabled={DISABLED} value="display" />
+      {error && <p>{error}</p>}
     </form>
   );
 }
