@@ -12,7 +12,6 @@ export const getDatalist = createAsyncThunk(
   'counter/fetchDatalist',
   async () => {
     const response = await fetchDatalist();
-    console.log({ response });
     return response;
   }
 );
@@ -20,13 +19,6 @@ export const getAccount = createAsyncThunk(
   'counter/fetchAccount',
   async (id) => {
     const response = await fetchAccount(id);
-    // const transformData = await response.map((el) => ({
-    //   id: el.id,
-    //   name: `${el.nameFirst} ${el.nameLast}`,
-    //   email: el.email,
-    //   ip: el.ip,
-    // }));
-    console.log('asdf', { response });
     return response;
   }
 );
@@ -52,20 +44,16 @@ export const accountsSlice = createSlice({
     builder
       .addCase(getDatalist.pending, (state) => {
         state.status = 'loading';
-        console.log(state.status);
       })
       .addCase(getDatalist.fulfilled, (state, action) => {
         state.status = 'idle';
-        console.log(state.status);
         state.names = action.payload;
       })
       .addCase(getAccount.pending, (state) => {
         state.status = 'loading';
-        console.log(state.status);
       })
       .addCase(getAccount.fulfilled, (state, action) => {
         state.status = 'idle';
-        console.log(state.status);
         state.obj = action.payload;
         if (
           state.history.length > 0 &&

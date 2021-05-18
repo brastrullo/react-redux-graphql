@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export function Searchbar({ accountNames, getAccountDetails }) {
   const [value, setValue] = useState('');
   const [error, setError] = useState('');
   const DISABLED = !value.length > 0;
-  useEffect(() => {
-    console.log({ value });
-  }, [value]);
 
   const inputHandler = (e) => {
     e.preventDefault();
@@ -25,8 +22,13 @@ export function Searchbar({ accountNames, getAccountDetails }) {
   };
 
   return (
-    <form onSubmit={submitHandler} className='flex max-w-sm my-2 mx-auto align-items'>
-      <label htmlFor="account" className="text-xs flex my-auto">Select account:</label>
+    <form
+      onSubmit={submitHandler}
+      className="flex max-w-sm my-2 mx-auto align-items"
+    >
+      <label htmlFor="account" className="text-xs flex my-auto">
+        Select account:
+      </label>
       <input
         list="account-names"
         type="text"
@@ -46,7 +48,9 @@ export function Searchbar({ accountNames, getAccountDetails }) {
         type="submit"
         disabled={DISABLED}
         value="select"
-        className={'text-white text-bold bg-blue-600 text-xs m-1 p-2 disabled:opacity-50'}
+        className={
+          'text-white text-bold bg-blue-600 text-xs m-1 p-2 disabled:opacity-50'
+        }
       />
       {error && <p>{error}</p>}
     </form>
