@@ -17,9 +17,11 @@ function App() {
   const accounts = useSelector(selectAccounts);
   const accountObj = useSelector(selectAccountObj);
   const history = useSelector(selectHistory);
+  const ACCOUNTS_CONNECTED = Object.keys(accounts).length > 0;
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getDatalist());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (Object.keys(accountObj) > 0) console.log(accountObj.name);
@@ -35,6 +37,9 @@ function App() {
 
   return (
     <div className="App">
+      <p>
+        Accounts Ready: <span>{`${ACCOUNTS_CONNECTED}`}</span>
+      </p>
       <Searchbar
         accountNames={accounts}
         getAccountDetails={getAccountDetails}

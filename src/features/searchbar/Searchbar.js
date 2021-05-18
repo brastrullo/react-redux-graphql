@@ -15,7 +15,10 @@ export function Searchbar({ accountNames, getAccountDetails }) {
   const submitHandler = (e) => {
     e.preventDefault();
     setValue('');
-    const id = accountNames.find((obj) => obj.name === value).id;
+    const id = accountNames.find((obj) => obj.name === value)?.id;
+    if (!id) {
+      alert('Account not found');
+    }
     getAccountDetails(id);
   };
 

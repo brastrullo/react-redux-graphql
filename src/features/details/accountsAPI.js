@@ -44,5 +44,6 @@ export async function fetchDatalist() {
 export async function fetchAccount(id) {
   const query = await client.query(ACCOUNT_DETAILS(id));
   const data = await query.data.account;
+  console.log({ data });
   return await data;
 }
