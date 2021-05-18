@@ -1,23 +1,35 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  deleteAccount,
+  selectAccounts,
+} from './features/details/accountsSlice';
 import './App.css';
 import { Searchbar } from './features/searchbar/Searchbar';
 import { Details } from './features/details/Details';
 import { History } from './features/history/History';
 
 function App() {
+  const accounts = useSelector(selectAccounts);
+  const dispatch = useDispatch();
   const [accountObj, setAccountObj] = useState(null);
   const [viewedAccounts, setViewedAccounts]  = useState([]);
   const [accountNames, setAccountNames] = useState(null);
 
   useEffect(() => {
-    setAccountNames(['Mike', 'Greg', 'Bob', "Sue"]);
-  }, []);
+    setAccountNames(accounts);
+  }, [accounts]);
   useEffect(() => {
     if (accountObj) console.log(accountObj.name);
   }, [accountObj]);
   useEffect(() => {
     console.log(viewedAccounts)
   }, [viewedAccounts]);
+
+  const deleteHandler = () => {
+    dispatch(deleteAccount());
+    setAccountObj(null);
+  };
 
   const getAccountDetails = (value) => {
     const obj = getAccountData(value);
@@ -42,8 +54,13 @@ function App() {
         accountNames={accountNames}
         getAccountDetails={getAccountDetails}
       />
-      <Details accountObj={accountObj} />
-      <History viewedAccounts={viewedAccounts}  />
+      <Details accountObj={accountObj} deleteHandler={deleteHandler} />
+      {viewedAccounts.length > 0 && (
+        <History
+          viewedAccounts={viewedAccounts}
+          getAccountDetails={getAccountDetails}
+        />
+      )}
     </div>
   );
 }

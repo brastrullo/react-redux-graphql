@@ -1,11 +1,13 @@
 import React from 'react';
 
-export function Details({ accountObj }) {
+export function Details({ accountObj, deleteAccount }) {
   return (
     <>
       {accountObj ? (
         <div>
-          <p>{accountObj.name}</p>
+          <p>
+            {accountObj.name} <button onClick={deleteAccount}>delete</button>
+          </p>
           <p>{accountObj.email}</p>
         </div>
       ) : (
