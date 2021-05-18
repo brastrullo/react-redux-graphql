@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export function Searchbar({ accountNames, getAccountDetails }) {
-  const inputRef = useRef(null);
   const [value, setValue] = useState('');
-
+  const DISABLED = !value.length > 0;
   useEffect(() => {
     console.log({ value });
   }, [value]);
@@ -16,7 +15,6 @@ export function Searchbar({ accountNames, getAccountDetails }) {
   const submitHandler = (e) => {
     e.preventDefault();
     setValue('');
-    inputRef.current.value = '';
     getAccountDetails(value);
   };
 
@@ -24,10 +22,10 @@ export function Searchbar({ accountNames, getAccountDetails }) {
     <form onSubmit={submitHandler}>
       <label htmlFor="account">Choose an account:</label>
       <input
-        ref={inputRef}
         list="account-names"
         type="text"
         name="account"
+        value={value}
         onChange={inputHandler}
       />
       {accountNames && (
@@ -37,7 +35,7 @@ export function Searchbar({ accountNames, getAccountDetails }) {
           ))}
         </datalist>
       )}
-      <input type="submit" disabled={!value.length > 0} value="display" />
+      <input type="submit" disabled={DISABLED} value="display" />
     </form>
   );
 }
