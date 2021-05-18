@@ -36,21 +36,32 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <p>
-        Accounts Ready: <span>{`${ACCOUNTS_CONNECTED}`}</span>
-      </p>
-      <Searchbar
-        accountNames={accounts}
-        getAccountDetails={getAccountDetails}
-      />
-      <Details accountObj={accountObj} deleteHandler={deleteHandler} />
-      {history.length > 0 && (
-        <History
-          viewedAccounts={history}
+    <div className="App grid">
+      <main>
+        <div>
+          <span>Accounts: {`${ACCOUNTS_CONNECTED ? '':'not'} connected`}</span>
+          <div
+            className={`
+            ${ACCOUNTS_CONNECTED
+              ? 'bg-green-400'
+              : 'bg-red-400'}
+            w-2 h-2 inline-block rounded-full mx-1 my-auto
+          `}
+          >
+          </div>
+        </div>
+        <Searchbar
+          accountNames={accounts}
           getAccountDetails={getAccountDetails}
         />
-      )}
+        <Details accountObj={accountObj} deleteHandler={deleteHandler} />
+        {history.length > 0 && (
+          <History
+            viewedAccounts={history}
+            getAccountDetails={getAccountDetails}
+          />
+        )}
+      </main>
     </div>
   );
 }

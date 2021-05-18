@@ -66,7 +66,10 @@ export const accountsSlice = createSlice({
           state.history[0].id === action.payload.id
         )
           return;
-        state.history = [...new Set([action.payload, ...state.history])];
+        state.history = [
+          action.payload,
+          ...state.history.filter((obj) => obj.id !== action.payload.id),
+        ];
       });
   },
 });

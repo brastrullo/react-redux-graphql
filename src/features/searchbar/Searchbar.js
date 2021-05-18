@@ -25,14 +25,15 @@ export function Searchbar({ accountNames, getAccountDetails }) {
   };
 
   return (
-    <form onSubmit={submitHandler}>
-      <label htmlFor="account">Choose an account:</label>
+    <form onSubmit={submitHandler} className='flex max-w-sm my-2 mx-auto align-items'>
+      <label htmlFor="account" className="text-xs flex my-auto">Select account:</label>
       <input
         list="account-names"
         type="text"
         name="account"
         value={value}
         onChange={inputHandler}
+        className="border-b-2 border-gray-200"
       />
       {accountNames && (
         <datalist id="account-names">
@@ -41,7 +42,12 @@ export function Searchbar({ accountNames, getAccountDetails }) {
           ))}
         </datalist>
       )}
-      <input type="submit" disabled={DISABLED} value="display" />
+      <input
+        type="submit"
+        disabled={DISABLED}
+        value="select"
+        className={'text-white text-bold bg-blue-600 text-xs m-1 p-2 disabled:opacity-50'}
+      />
       {error && <p>{error}</p>}
     </form>
   );
