@@ -36,10 +36,16 @@ export const accountsSlice = createSlice({
   initialState,
   reducers: {
     deleteAccount: (state, action) => {
-      console.log({ state, action });
-      state.names = state.names.filter(
-        (accountName) => accountName !== action.payload
-      );
+      state.obj = {};
+      console.log(state.names, state.history);
+      if (state.names.length > 0) {
+        state.names = state.names.filter((obj) => obj.id !== action.payload.id);
+      }
+      if (state.history.length > 0) {
+        state.history = state.history.filter(
+          (obj) => obj.id !== action.payload.id
+        );
+      }
     },
   },
   extraReducers: (builder) => {
